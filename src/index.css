@@ -1,15 +1,30 @@
 @font-face {
-    font-family: 'lemon brush';
-    src: url('./fonts/lemon-brush/LemonBrushArabicPersonalUseOnly-Regular.otf');
+  font-family: "lemon brush";
+  src: url("./fonts/lemon-brush/LemonBrushArabicPersonalUseOnly-Regular.otf");
 }
 @font-face {
-    font-family: 'algirah';
-    src: url('./fonts/aligarh/AligarhArabicFREEPERSONALUSE-Regular.otf');
+  font-family: "algirah";
+  src: url("./fonts/aligarh/AligarhArabicFREEPERSONALUSE-Regular.otf");
 }
 
+body {
+  margin: 0;
+  padding: 0;
+  background: #000000;
+}
+p, button{
+  font-family: "algirah";
+}
+button{cursor: pointer;}
+input[type = submit]{
+  cursor: pointer;
+}
 
-body{
-    margin: 0;
-    padding: 0;
-    background: #000000;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "lemon brush";
 }
