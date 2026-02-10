@@ -16,12 +16,12 @@ export default function Login() {
 
   return (
     <div className="Container">
-      <img src="logo.jpeg" alt="Qawem Logo" />
+      <img src="Qawem.jpg" alt="Qawem Logo" />
 
       <div id="error"></div>
       <input type="text" id="userid" placeholder="ادخل ال id الخاص بك" />
       <button onClick={checkid}>ابدء قاوم</button>
-      <a href="/register">ليس لديك id سجل في قاوم لاول مره</a>
+      <a href="#">ليس لديك حساب؟ <span>سجل هنا</span></a>
     </div>
   );
 }

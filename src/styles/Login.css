@@ -1,3 +1,8 @@
+body {
+  background-image: url(unnamed.jpg) ;
+  background-size: cover;
+  background-position: center;
+}
 .Container {
   width: 100vw;
   height: 100vh;
@@ -60,4 +65,24 @@
   direction: rtl;
   font-family: "algirah";
   padding: 10px;
+}
+.Container a {
+  color: #fff;
+  text-decoration: none;
+  direction: rtl;
+  font-family: "algirah", 'Cairo';
+  padding: 10px;
+  font-size: 14px;
+  opacity: 0.8;
+  transition: opacity 0.3s;
+}
+
+.Container a span {
+    color: #D4AF37; /* كلمة "سجل" تبقى ذهبي */
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.Container a:hover {
+  opacity: 1;
 }
