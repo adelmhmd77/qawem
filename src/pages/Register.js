@@ -13,7 +13,7 @@ function popup() {
   }
   return (
     <div className="register-form">
-      <img src="logo.jpeg" alt="Qawem Logo" />
+      <img src="Qawem.jpg" alt="Qawem Logo" />
       <form>
         <input type="text" placeholder="اسمك" required/>
         <input type="date" placeholder="سنك" required/>

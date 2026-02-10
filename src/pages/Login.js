@@ -21,7 +21,7 @@ export default function Login() {
       <div id="error"></div>
       <input type="text" id="userid" placeholder="ادخل ال id الخاص بك" />
       <button onClick={checkid}>ابدء قاوم</button>
-      <a href="#">ليس لديك حساب؟ <span>سجل هنا</span></a>
+      <a href="/register">ليس لديك حساب؟ <span>سجل هنا</span></a>
     </div>
   );
 }
