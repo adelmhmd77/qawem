@@ -7,16 +7,38 @@
   src: url("./fonts/aligarh/AligarhArabicFREEPERSONALUSE-Regular.otf");
 }
 
-body {
-  margin: 0;
-  padding: 0;
-  background: #000000;
+:root {
+  --color-1: #050505;
+  --color-2: #0c5365;
+  --color-3: #fff;
+  --color-4: #abdef6;
+  --color-5: #12e8f7;
+  --color-6: #0a192f;
 }
-p, button{
+
+body {
+  font-family: "Cairo", sans-serif;
+  /* الخلفية اللي اخترناها: أسود مع تدرج أزرق غامق */
+  background-color: #050505;
+  background-image: radial-gradient(
+    circle at 50% 0%,
+    var(--color-6) 0%,
+    var(--color-1) 80%
+  );
+  color: #fff;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100vh;
+}
+
+p,
+button {
   font-family: "algirah";
 }
-button{cursor: pointer;}
-input[type = submit]{
+button {
+  cursor: pointer;
+}
+input[type="submit"] {
   cursor: pointer;
 }
 
@@ -27,4 +49,38 @@ h4,
 h5,
 h6 {
   font-family: "lemon brush";
+}
+
+
+
+/* 
+================================
+#REUSED CLASSES
+================================
+*/
+
+.container{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+.container img{
+  width: 10%;
+}
+/* Scrollbar width */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+/* Track (background area) */
+::-webkit-scrollbar-track {
+  background: #000;
+}
+
+/* Scrollbar handle */
+::-webkit-scrollbar-thumb {
+  background: #555;
+  border-radius: 10px;
 }

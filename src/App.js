@@ -3,6 +3,8 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Home from "./pages/Home"; 
 import NavPar from "./Componan/NavPar";
+import VerifyUser from "./admin/VerifyUser";
+import ManagesUser from "./admin/ManagesUser";
 
 function App() {
   return (
@@ -22,6 +24,8 @@ function App() {
 
         {/* ADMIN PROTECTED ROUTES */}
         <Route path="/admin" element={<Login />} />
+        <Route path="/verify" element={<VerifyUser />} />
+        <Route path="/manage-users" element={<ManagesUser />} />
       </Routes>
     </Router>
     </div>

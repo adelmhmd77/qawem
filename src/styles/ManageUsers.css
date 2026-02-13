@@ -1,0 +1,15 @@
+.manage {
+  padding: 50px;
+}
+.manage h2{
+    text-align: center;
+}
+.manage .user-v {
+  border: 2px solid white;
+  display: flex;
+  padding: 5px 20px;
+  justify-content: space-around;
+  align-items: center;
+  margin-bottom: 20px;
+  border-radius: 50px;
+}

@@ -1,0 +1,22 @@
+.verify{
+    padding: 50px;
+}
+.verify h2{
+    text-align: center;
+}
+.verify .user{
+    border: 2px solid white;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+    align-items: center;
+    border-radius: 50px;
+}
+.verify .user button{
+    padding: 8px;
+    background: rgb(13, 177, 13);
+    border: none;
+    outline: none;
+    border-radius: 20px;
+}
