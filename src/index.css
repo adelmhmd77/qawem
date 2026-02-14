@@ -33,7 +33,7 @@ body {
 
 p,
 button {
-  font-family: "algirah";
+  /* font-family: "algirah"; */
 }
 button {
   cursor: pointer;
@@ -48,7 +48,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: "lemon brush";
+  /* font-family: "lemon brush"; */
 }
 
 

@@ -1,3 +1,4 @@
+// VerifyUser.jsx
 import React, { useEffect, useState } from "react";
 import { db } from "../firebase/config";
 import {
@@ -7,8 +8,10 @@ import {
   getDocs,
   doc,
   updateDoc,
+  serverTimestamp,
 } from "firebase/firestore";
 import '../styles/VerifyUsers.css'
+
 export default function VerifyUser() {
   const [users, setUsers] = useState([]);
 
@@ -20,7 +23,7 @@ export default function VerifyUser() {
     try {
       const q = query(
         collection(db, "users"),
-        where("status", "==", "pending"),
+        where("status", "==", "pending")
       );
 
       const querySnapshot = await getDocs(q);
@@ -32,14 +35,17 @@ export default function VerifyUser() {
 
       setUsers(usersList);
     } catch (error) {
-      console.error("Error fetching users:", error);
+      console.error("Error fetching pending users:", error);
     }
   };
+
   const generateRandomId = () => {
     return "QW-" + Math.floor(100000 + Math.random() * 900000);
   };
 
   const handleVerify = async (id) => {
+    if (!window.confirm("هل أنت متأكد من قبول هذا المستخدم؟")) return;
+
     try {
       const userRef = doc(db, "users", id);
 
@@ -47,37 +53,74 @@ export default function VerifyUser() {
         status: "approved",
         memberId: generateRandomId(),
         hearts: 3,
+        verifiedAt: serverTimestamp(),      // optional: track when approved
       });
 
+      // Remove from list
       setUsers((prev) => prev.filter((user) => user.id !== id));
     } catch (error) {
       console.error("Error verifying user:", error);
+      alert("حدث خطأ أثناء القبول");
+    }
+  };
+
+  const handleReject = async (id, userName = "") => {
+    if (!window.confirm(`هل أنت متأكد من رفض المستخدم "${userName || 'غير معروف'}"؟\nهذا الإجراء لا يمكن التراجع عنه.`)) {
+      return;
+    }
+
+    try {
+      const userRef = doc(db, "users", id);
+
+      await updateDoc(userRef, {
+        status: "rejected",
+        rejectedAt: serverTimestamp(),      // optional: track rejection time
+        // Optional: you can add a reason field if you want admins to write why
+        // rejectReason: "..." 
+      });
+
+      // Remove from pending list
+      setUsers((prev) => prev.filter((user) => user.id !== id));
+    } catch (error) {
+      console.error("Error rejecting user:", error);
+      alert("حدث خطأ أثناء الرفض");
     }
   };
 
   return (
-    <div  className="verify">
+    <div className="verify">
       <h2>مستخدمين في انتظار التوثيق</h2>
 
       {users.length === 0 ? (
-        <p>No users pending review</p>
+        <p>لا يوجد مستخدمين في انتظار المراجعة</p>
       ) : (
         users.map((user) => (
-          <div className="user"
-            key={user.id}
-       
-          >
+          <div className="user" key={user.id}>
             <p>
-              <strong>Name:</strong> {user.name}
+              <strong>الاسم:</strong> {user.name || "غير محدد"}
             </p>
             <p>
-              <strong>Birth Date:</strong> {user.birthDate}
+              <strong>تاريخ الميلاد:</strong> {user.birthDate || "غير محدد"}
             </p>
             <p>
-              <strong>Phone:</strong> {user.phone}
+              <strong>رقم الهاتف:</strong> {user.phone || "غير محدد"}
             </p>
 
-            <button onClick={() => handleVerify(user.id)}>Verify</button>
+            <div className="action-buttons">
+              <button 
+                className="btn-verify"
+                onClick={() => handleVerify(user.id)}
+              >
+                قبول (Verify)
+              </button>
+              
+              <button 
+                className="btn-reject"
+                onClick={() => handleReject(user.id, user.name)}
+              >
+                رفض (Reject)
+              </button>
+            </div>
           </div>
         ))
       )}

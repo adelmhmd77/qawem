@@ -1,0 +1,110 @@
+.leaderboard {
+  padding: 2rem;
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.podium {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 1.5rem;
+  margin: 2rem 0;
+  flex-wrap: wrap;
+}
+
+.podium-position {
+  flex: 1;
+  min-width: 220px;
+  padding: 1.5rem;
+  border-radius: 12px;
+  color: white;
+  text-align: center;
+}
+
+.gold {
+  background: linear-gradient(135deg, #ffd700, #d4a017);
+  transform: translateY(-10px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+.silver {
+  background: linear-gradient(135deg, #c0c0c0, #a8a8a8);
+}
+
+.bronze {
+  background: linear-gradient(135deg, #cd7f32, #b36b2a);
+}
+
+.medal {
+  font-size: 4rem;
+  margin-bottom: 0.5rem;
+}
+
+.rank {
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.name {
+  font-size: 1.4rem;
+  font-weight: bold;
+  margin: 0.5rem 0;
+}
+
+.score {
+  font-size: 1.3rem;
+  margin: 0.5rem 0;
+}
+
+.hearts {
+  font-size: 1.6rem;
+}
+
+.leaderboard-list {
+  margin-top: 2rem;
+}
+
+.leaderboard-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid #eee;
+  background: #f9f9f9;
+  border-radius: 8px;
+  margin-bottom: 0.8rem;
+}
+
+.rank-number {
+  width: 50px;
+  font-weight: bold;
+  color: #555;
+}
+
+.name {
+  flex: 1;
+  text-align: right;
+  font-weight: 500;
+}
+
+.score {
+  font-weight: bold;
+  color: #1976d2;
+  min-width: 120px;
+  text-align: center;
+}
+
+.hearts-small {
+  font-size: 1.2rem;
+  min-width: 80px;
+  text-align: center;
+}
+
+.loading, .leaderboard-empty {
+  text-align: center;
+  padding: 4rem;
+  font-size: 1.3rem;
+}

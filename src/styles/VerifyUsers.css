@@ -1,22 +1,47 @@
-.verify{
-    padding: 50px;
+.user {
+  border: 1px solid hsl(0, 0%, 87%);
+  border-radius: 8px;
+  padding: 1.2rem;
+  margin-bottom: 1.2rem;
+  background: #f9f9f9;
+  direction: rtl;
 }
-.verify h2{
-    text-align: center;
+
+.action-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
 }
-.verify .user{
-    border: 2px solid white;
-    padding: 10px 20px;
-    display: flex;
-    justify-content: space-around;
-    margin-bottom: 20px;
-    align-items: center;
-    border-radius: 50px;
+
+.btn-verify {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
 }
-.verify .user button{
-    padding: 8px;
-    background: rgb(13, 177, 13);
-    border: none;
-    outline: none;
-    border-radius: 20px;
+
+.btn-verify:hover {
+  background-color: #43a047;
+}
+
+.btn-reject {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.btn-reject:hover {
+  background-color: #e53935;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }

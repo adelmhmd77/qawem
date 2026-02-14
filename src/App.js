@@ -5,29 +5,49 @@ import Home from "./pages/Home";
 import NavPar from "./Componan/NavPar";
 import VerifyUser from "./admin/VerifyUser";
 import ManagesUser from "./admin/ManagesUser";
+import Leaderboard from "./admin/Leaderboard";
+import AdminLogin from "./admin/adminlogin";
+
+// Import the protection wrappers
+import UserProtectedRoute from "./utils/UserProtectedRoute";
+import AdminProtectedRoute from "./utils/AdminProtectedRoute";
+import AdminHome from "./admin/AdminHome";
 
 function App() {
   return (
     <div>
-    <NavPar/>
+      <NavPar />
 
-    <Router>
-      <Routes>
-        {/* USER ROUTES */}
-        <Route path="/" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/profile" element={<Login />} />
+      <Router>
+        <Routes>
 
-        {/* ADMIN LOGIN PROTECTOR */}
-        <Route path="/login" element={<Login />} />
+          {/* Public routes - anyone can access */}
+          <Route path="/" element={<Login />} />
+          <Route path="/register" element={<Register />} />
 
-        {/* ADMIN PROTECTED ROUTES */}
-        <Route path="/admin" element={<Login />} />
-        <Route path="/verify" element={<VerifyUser />} />
-        <Route path="/manage-users" element={<ManagesUser />} />
-      </Routes>
-    </Router>
+          {/* Protected user routes - must have memberId */}
+          <Route element={<UserProtectedRoute />}>
+            <Route path="/home" element={<Home />} />
+            <Route path="/profile" element={<div>صفحة الملف الشخصي (تحت التطوير)</div>} />
+            <Route path="/leaderboard" element={<Leaderboard />} />
+          </Route>
+
+          {/* Admin login - public */}
+          <Route path="/adminlogin" element={<AdminLogin />} />
+
+          {/* Protected admin routes - must be admin logged in */}
+          <Route element={<AdminProtectedRoute />}>
+            <Route path="/verify" element={<VerifyUser />} />
+            <Route path="/manage-users" element={<ManagesUser />} />
+            <Route path="/admin" element={<AdminHome />} />
+            {/* Add more admin pages here when needed */}
+          </Route>
+
+          {/* Optional: 404 fallback */}
+          <Route path="*" element={<div>404 - الصفحة غير موجودة</div>} />
+
+        </Routes>
+      </Router>
     </div>
   );
 }

@@ -1,0 +1,88 @@
+.home-container {
+  padding: 1.5rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.summary-box {
+  background: #f0f7ff;
+  padding: 1rem;
+  border-radius: 10px;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.accordion-days details {
+  margin-bottom: 1.2rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.accordion-days summary {
+  padding: 1rem 1.2rem;
+  background: #e8f5e9;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.tasks-list {
+  padding: 1rem;
+}
+
+.task-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem;
+  margin-bottom: 0.6rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+}
+
+.task-row.done {
+  background: #e8f5e9;
+}
+
+.task-row.missed {
+  background: #ffebee;
+  text-decoration: line-through;
+  color: #777;
+}
+
+.task-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.btn-done {
+  background: #4caf50;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-miss {
+  background: #f44336;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-done:disabled,
+.btn-miss:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.task-points {
+  font-weight: bold;
+  color: #1976d2;
+  min-width: 50px;
+  text-align: right;
+}

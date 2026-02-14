@@ -1,0 +1,86 @@
+.admin-login-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #1e3c72, #2a5298);
+  padding: 20px;
+  direction: rtl;
+}
+
+.login-box {
+  background: white;
+  padding: 2.5rem 2rem;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+  width: 100%;
+  max-width: 420px;
+  text-align: center;
+}
+
+h2 {
+  margin-bottom: 0.5rem;
+  color: #1e3c72;
+}
+
+.subtitle {
+  color: #666;
+  margin-bottom: 2rem;
+}
+
+.error-message {
+  background: #ffebee;
+  color: #c62828;
+  padding: 0.8rem;
+  border-radius: 6px;
+  margin-bottom: 1.5rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+  text-align: right;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #333;
+}
+
+input {
+  width: 100%;
+  padding: 0.9rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.login-btn {
+  width: 100%;
+  padding: 1rem;
+  background: #1e88e5;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.login-btn:hover {
+  background: #1565c0;
+}
+
+.back-link {
+  margin-top: 1.5rem;
+}
+
+.back-link a {
+  color: #1e88e5;
+  text-decoration: none;
+}
+
+.back-link a:hover {
+  text-decoration: underline;
+}
