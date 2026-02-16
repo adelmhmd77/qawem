@@ -1,4 +1,9 @@
-import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useLocation,
+} from "react-router-dom";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Home from "./pages/Home";
@@ -42,12 +47,12 @@ function Layout() {
 
         {/* Admin login */}
         <Route path="/adminlogin" element={<AdminLogin />} />
-          <Route path="/verify" element={<VerifyUser />} />
-          <Route path="/manage-users" element={<ManagesUser />} />
-          <Route path="/admin" element={<AdminHome />} />
 
         {/* Admin protected routes */}
         <Route element={<AdminProtectedRoute />}>
+          <Route path="/verify" element={<VerifyUser />} />
+          <Route path="/manage-users" element={<ManagesUser />} />
+          <Route path="/admin" element={<AdminHome />} />
         </Route>
 
         {/* 404 */}
