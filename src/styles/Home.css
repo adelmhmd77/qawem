@@ -1,33 +1,37 @@
 .home-container {
+  width: 60%;
   padding: 1.5rem;
-  max-width: 900px;
   margin: 0 auto;
 }
 
 .summary-box {
-  background: #f0f7ff;
+  background: linear-gradient(to left top, #081925, #020f1a);
   padding: 1rem;
   border-radius: 10px;
   margin-bottom: 2rem;
   text-align: center;
+  box-shadow: 0 4px 18px var(--color-6);
 }
 
 .accordion-days details {
   margin-bottom: 1.2rem;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+  border: none;
+  border-radius: 18px;
   overflow: hidden;
+  box-shadow: var(--color-6) 5px 4px 40px 4px;
 }
-
 .accordion-days summary {
   padding: 1rem 1.2rem;
-  background: #e8f5e9;
+  background: var(--color-6);
   font-weight: bold;
   cursor: pointer;
+  border: none;
+  color: #fff;
 }
 
 .tasks-list {
   padding: 1rem;
+  background: var(--color-6);
 }
 
 .task-row {
@@ -37,15 +41,15 @@
   padding: 0.8rem;
   margin-bottom: 0.6rem;
   border-radius: 6px;
-  border: 1px solid #eee;
+  border: none;
 }
 
 .task-row.done {
-  background: #e8f5e9;
+  background: var(--color-2);
 }
 
 .task-row.missed {
-  background: #ffebee;
+  background: #971327;
   text-decoration: line-through;
   color: #777;
 }
@@ -78,11 +82,31 @@
 .btn-miss:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+  transition: all 0.3s ease;
 }
-
+.btn-done:hover:not(:disabled) {
+  background: #45a049;
+}
+.btn-miss:hover:not(:disabled) {
+  background: #e53935;
+}
 .task-points {
   font-weight: bold;
   color: #1976d2;
   min-width: 50px;
   text-align: right;
+}
+.home-container h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #1976d2;
+}
+.home-container h3 {
+  padding: 1.5rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.summary-box p {
+  color: #1976d2;
 }

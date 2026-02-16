@@ -10,10 +10,12 @@ import {
   updateDoc,
   serverTimestamp,
 } from "firebase/firestore";
-import '../styles/VerifyUsers.css'
+import { useNavigate } from "react-router-dom";
+import "../styles/VerifyUsers.css";
 
 export default function VerifyUser() {
   const [users, setUsers] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchUsers();
@@ -53,10 +55,9 @@ export default function VerifyUser() {
         status: "approved",
         memberId: generateRandomId(),
         hearts: 3,
-        verifiedAt: serverTimestamp(),      // optional: track when approved
+        verifiedAt: serverTimestamp(),
       });
 
-      // Remove from list
       setUsers((prev) => prev.filter((user) => user.id !== id));
     } catch (error) {
       console.error("Error verifying user:", error);
@@ -65,7 +66,13 @@ export default function VerifyUser() {
   };
 
   const handleReject = async (id, userName = "") => {
-    if (!window.confirm(`هل أنت متأكد من رفض المستخدم "${userName || 'غير معروف'}"؟\nهذا الإجراء لا يمكن التراجع عنه.`)) {
+    if (
+      !window.confirm(
+        `هل أنت متأكد من رفض المستخدم "${
+          userName || "غير معروف"
+        }"؟\nهذا الإجراء لا يمكن التراجع عنه.`
+      )
+    ) {
       return;
     }
 
@@ -74,12 +81,9 @@ export default function VerifyUser() {
 
       await updateDoc(userRef, {
         status: "rejected",
-        rejectedAt: serverTimestamp(),      // optional: track rejection time
-        // Optional: you can add a reason field if you want admins to write why
-        // rejectReason: "..." 
+        rejectedAt: serverTimestamp(),
       });
 
-      // Remove from pending list
       setUsers((prev) => prev.filter((user) => user.id !== id));
     } catch (error) {
       console.error("Error rejecting user:", error);
@@ -89,6 +93,15 @@ export default function VerifyUser() {
 
   return (
     <div className="verify">
+      
+      {/* Back Button */}
+      <button
+        className="backtoadmin"
+        onClick={() => navigate("/admin")}
+      >
+        ← الرجوع إلى لوحة التحكم
+      </button>
+
       <h2>مستخدمين في انتظار التوثيق</h2>
 
       {users.length === 0 ? (
@@ -107,18 +120,18 @@ export default function VerifyUser() {
             </p>
 
             <div className="action-buttons">
-              <button 
+              <button
                 className="btn-verify"
                 onClick={() => handleVerify(user.id)}
               >
-                قبول (Verify)
+                قبول
               </button>
-              
-              <button 
+
+              <button
                 className="btn-reject"
                 onClick={() => handleReject(user.id, user.name)}
               >
-                رفض (Reject)
+                رفض
               </button>
             </div>
           </div>

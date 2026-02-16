@@ -61,36 +61,29 @@ export default function Leaderboard() {
   return (
     <div className="leaderboard" dir="rtl">
       <h2>🏆 الترتيب العام</h2>
-      <p>بناءً على نقاط تحدي رمضان (حتى لو ٠ حالياً)</p>
 
       <div className="podium">
-        {topUsers.length >= 2 && (
-          <div className="podium-position silver">
-            <div className="medal">🥈</div>
-            <div className="rank">2</div>
-            <div className="name">{topUsers[1].name || "مستخدم"}</div>
-            <div className="score">{topUsers[1].totalScore} نقطة</div>
-            <div className="hearts">{"❤️".repeat(topUsers[1].hearts ?? 0)}</div>
-          </div>
-        )}
+      
 
         {topUsers.length >= 1 && (
           <div className="podium-position gold">
-            <div className="medal">🥇</div>
             <div className="rank">1</div>
             <div className="name">{topUsers[0].name || "مستخدم"}</div>
             <div className="score">{topUsers[0].totalScore} نقطة</div>
-            <div className="hearts">{"❤️".repeat(topUsers[0].hearts ?? 0)}</div>
           </div>
         )}
-
+  {topUsers.length >= 2 && (
+          <div className="podium-position silver">
+            <div className="rank">2</div>
+            <div className="name">{topUsers[1].name || "مستخدم"}</div>
+            <div className="score">{topUsers[1].totalScore} نقطة</div>
+          </div>
+        )}
         {topUsers.length >= 3 && (
           <div className="podium-position bronze">
-            <div className="medal">🥉</div>
             <div className="rank">3</div>
             <div className="name">{topUsers[2].name || "مستخدم"}</div>
             <div className="score">{topUsers[2].totalScore} نقطة</div>
-            <div className="hearts">{"❤️".repeat(topUsers[2].hearts ?? 0)}</div>
           </div>
         )}
       </div>
@@ -102,7 +95,6 @@ export default function Leaderboard() {
             <span className="name">{user.name || "مستخدم"}</span>
             <span className="score">{user.totalScore} نقطة</span>
             <span className="hearts-small">
-              {"❤️".repeat(user.hearts ?? 0)}
             </span>
           </div>
         ))}

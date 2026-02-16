@@ -1,13 +1,6 @@
 // Home.jsx
-import React, {
-  useEffect,
-  useState,
-  useMemo,
-  useCallback,
-} from "react";
-
+import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { db } from "../firebase/config";
-
 import {
   collection,
   query,
@@ -16,15 +9,47 @@ import {
   doc,
   updateDoc,
 } from "firebase/firestore";
-
 import "../styles/Home.css";
 
 /* ================= CONSTANTS ================= */
 
-const RAMADAN_START_DATE = new Date("2026-02-19"); // Turkey Ramadan start
+const RAMADAN_START_DATE = new Date("2026-02-19");
+
+const DAILY_CHALLENGES = [
+  "ابتسم في وجه 5 أشخاص اليوم",
+  "اتصل بشخص لم تكلمه منذ فترة",
+  "تصدق ولو بمبلغ بسيط",
+  "اقرأ 10 صفحات إضافية",
+  "ساعد أحد أفراد عائلتك بدون طلب",
+  "قل أذكار النوم كاملة",
+  "امتنع عن الغيبة طوال اليوم",
+  "ادعُ لشخص تحبه دعاء خاص",
+  "نظف مكاناً في بيتك",
+  "اقرأ عن سيرة صحابي",
+  "صلِّ ركعتين شكر لله",
+  "اكتب 5 نعم تشكر الله عليها",
+  "أفطر صائماً",
+  "حافظ على تكبيرة الإحرام",
+  "اقرأ تفسير سورة قصيرة",
+  "أرسل رسالة طيبة لشخص",
+  "استمع لدرس ديني 20 دقيقة",
+  "سامح شخصاً أخطأ في حقك",
+  "أكثر من الاستغفار 200 مرة",
+  "ادعُ لوالديك 50 مرة",
+  "احفظ آية جديدة",
+  "ابتعد عن السوشيال ميديا ساعتين",
+  "ساعد محتاجاً",
+  "حافظ على قيام الليل",
+  "أصلح بين شخصين",
+  "اقرأ أذكار بعد الصلاة كاملة",
+  "تجنب أي جدال اليوم",
+  "قل لا إله إلا الله 300 مرة",
+  "أدخل السرور على طفل",
+  "اختم يومك بمحاسبة النفس",
+];
 
 const TASKS = [
-  { name: "صلاة الفجر", points: 15 }, // 0 (heart)
+  { name: "صلاة الفجر", points: 15 },
   { name: "أذكار الصباح", points: 8 },
   { name: "قراءة جزء من القرآن", points: 12 },
   { name: "قراءة تفسير بسيط لما قرأت", points: 10 },
@@ -38,7 +63,7 @@ const TASKS = [
   { name: "صلاة المغرب + الدعاء قبل الإفطار", points: 12 },
   { name: "صلاة العشاء", points: 12 },
   { name: "التراويح / قيام الليل", points: 20 },
-  { name: "التحدي اليومي الخاص بك", points: 25 }, // 14 (heart)
+  { name: "التحدي اليومي", points: 25 }, // index 14
 ];
 
 /* ================= COMPONENT ================= */
@@ -56,7 +81,6 @@ export default function Home() {
 
   useEffect(() => {
     const memberId = localStorage.getItem("memberId");
-
     if (!memberId) {
       window.location.href = "/";
       return;
@@ -70,7 +94,6 @@ export default function Home() {
         );
 
         const snap = await getDocs(q);
-
         if (snap.empty) {
           window.location.href = "/";
           return;
@@ -78,7 +101,6 @@ export default function Home() {
 
         const userDoc = snap.docs[0];
         const data = userDoc.data();
-
         const ref = doc(db, "users", userDoc.id);
 
         setUserRef(ref);
@@ -88,7 +110,7 @@ export default function Home() {
         setDailyProgress(data.dailyProgress ?? {});
         setDeductedDays(data.lastHeartDeductionDays ?? []);
       } catch (err) {
-        console.error("Error fetching user:", err);
+        console.error(err);
       } finally {
         setLoading(false);
       }
@@ -101,13 +123,9 @@ export default function Home() {
 
   const currentRamadanDay = useMemo(() => {
     const now = new Date();
-
     const diffMs = now - RAMADAN_START_DATE;
-    const diffDays = Math.floor(
-      diffMs / (1000 * 60 * 60 * 24)
-    );
-
-    return Math.max(1, Math.min(30, diffDays + 1));
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    return Math.max(0, Math.min(30, diffDays + 1));
   }, []);
 
   /* ================= HEART DEDUCTION ================= */
@@ -116,40 +134,20 @@ export default function Home() {
     if (!userRef || currentRamadanDay < 1) return;
 
     let totalLost = 0;
-
     const newDeducted = [...deductedDays];
-    const updates = {};
 
     for (let day = 1; day <= currentRamadanDay; day++) {
       const dayStr = day.toString();
-
       if (newDeducted.includes(dayStr)) continue;
 
-      const dayData =
-        dailyProgress[dayStr] || { completed: [] };
-
+      const dayData = dailyProgress[dayStr] || { completed: [] };
       let dayLost = 0;
 
-      /* Fajr (0) */
-      const fajrStatus = dayData.completed.find(
-        (v) => Math.abs(v) === 0
-      );
+      const fajr = dayData.completed.find(v => Math.abs(v) === 1);
+      if (fajr === undefined || fajr < 0) dayLost++;
 
-      if (fajrStatus === undefined || fajrStatus < 0) {
-        dayLost++;
-      }
-
-      /* Daily Challenge (14) */
-      const dailyStatus = dayData.completed.find(
-        (v) => Math.abs(v) === 14
-      );
-
-      if (
-        dailyStatus === undefined ||
-        dailyStatus < 0
-      ) {
-        dayLost++;
-      }
+      const challenge = dayData.completed.find(v => Math.abs(v) === 15);
+      if (challenge === undefined || challenge < 0) dayLost++;
 
       if (dayLost > 0) {
         totalLost += dayLost;
@@ -160,41 +158,20 @@ export default function Home() {
     if (totalLost > 0) {
       const newHearts = Math.max(0, hearts - totalLost);
 
-      updates.hearts = newHearts;
-      updates.lastHeartDeductionDays = newDeducted;
+      await updateDoc(userRef, {
+        hearts: newHearts,
+        lastHeartDeductionDays: newDeducted,
+      });
 
-      try {
-        await updateDoc(userRef, updates);
-
-        setHearts(newHearts);
-        setDeductedDays(newDeducted);
-
-        alert(
-          `تم خصم ${totalLost} قلوب بسبب عدم إكمال صلاة الفجر أو التحدي اليومي`
-        );
-      } catch (err) {
-        console.error("Heart deduction failed:", err);
-      }
+      setHearts(newHearts);
+      setDeductedDays(newDeducted);
     }
-  }, [
-    userRef,
-    currentRamadanDay,
-    dailyProgress,
-    deductedDays,
-    hearts,
-  ]);
-
-  /* ================= AUTO CHECK ================= */
+  }, [userRef, currentRamadanDay, dailyProgress, deductedDays, hearts]);
 
   useEffect(() => {
     if (!loading && userRef) {
       checkAndDeductHearts();
-
-      const interval = setInterval(
-        checkAndDeductHearts,
-        30 * 60 * 1000
-      );
-
+      const interval = setInterval(checkAndDeductHearts, 1800000);
       return () => clearInterval(interval);
     }
   }, [loading, userRef, checkAndDeductHearts]);
@@ -204,74 +181,40 @@ export default function Home() {
   const markTask = async (dayStr, taskIndex, isDone) => {
     if (!userRef) return;
 
-    const dayData =
-      dailyProgress[dayStr] || { completed: [] };
+    const dayData = dailyProgress[dayStr] || { completed: [] };
 
-    const isMarked = dayData.completed.some(
-      (val) => Math.abs(val) === taskIndex
-    );
+    if (dayData.completed.some(v => Math.abs(v) === taskIndex + 1)) return;
 
-    if (isMarked) return;
+    const markValue = isDone ? taskIndex + 1 : -(taskIndex + 1);
+    const pointsToAdd = isDone ? TASKS[taskIndex].points : 0;
 
-    const markValue = isDone
-      ? taskIndex
-      : -(taskIndex + 1);
+    const updatedCompleted = [...dayData.completed, markValue];
 
-    const pointsToAdd = isDone
-      ? TASKS[taskIndex].points
-      : 0;
+    await updateDoc(userRef, {
+      [`dailyProgress.${dayStr}`]: { completed: updatedCompleted },
+      totalScore: totalScore + pointsToAdd,
+    });
 
-    try {
-      const updatedCompleted = [
-        ...dayData.completed,
-        markValue,
-      ];
+    setDailyProgress(prev => ({
+      ...prev,
+      [dayStr]: { completed: updatedCompleted },
+    }));
 
-      const updates = {
-        [`dailyProgress.${dayStr}`]: {
-          completed: updatedCompleted,
-        },
-        totalScore: totalScore + pointsToAdd,
-      };
-
-      await updateDoc(userRef, updates);
-
-      setDailyProgress((prev) => ({
-        ...prev,
-        [dayStr]: { completed: updatedCompleted },
-      }));
-
-      setTotalScore((prev) => prev + pointsToAdd);
-
-      checkAndDeductHearts();
-    } catch (err) {
-      console.error(err);
-      alert("حدث خطأ أثناء الحفظ");
-    }
+    setTotalScore(prev => prev + pointsToAdd);
   };
 
   /* ================= TASK STATUS ================= */
 
   const getTaskStatus = (dayStr, taskIndex) => {
-    const dayData =
-      dailyProgress[dayStr] || { completed: [] };
-
+    const dayData = dailyProgress[dayStr] || { completed: [] };
     const value = dayData.completed.find(
-      (v) => Math.abs(v) === taskIndex
+      v => Math.abs(v) === taskIndex + 1
     );
-
     if (value === undefined) return "pending";
-
-    return value >= 0 ? "done" : "missed";
+    return value > 0 ? "done" : "missed";
   };
 
-  /* ================= LOADING ================= */
-
-  if (loading) {
-    return (
-      <div className="loading">جاري التحميل...</div>
-    );
-  }
+  if (loading) return <div className="loading">جاري التحميل...</div>;
 
   /* ================= UI ================= */
 
@@ -281,91 +224,39 @@ export default function Home() {
       <h3>تحدي رمضان ٣٠ يوم</h3>
 
       <div className="summary-box">
-        <p>
-          اليوم في رمضان:{" "}
-          <strong>{currentRamadanDay}</strong>
-        </p>
-
+        <p>اليوم: <strong>{currentRamadanDay}</strong></p>
         <p>قلوبك: {"❤️".repeat(hearts)}</p>
-
-        <p>
-          مجموع النقاط:{" "}
-          <strong>{totalScore}</strong>
-        </p>
-
-        <small style={{ color: "#d32f2f" }}>
-          عدم إكمال الفجر أو التحدي يخصم قلباً
-        </small>
+        <p>مجموع النقاط: <strong>{totalScore}</strong></p>
       </div>
 
       <div className="accordion-days">
         {Array.from({ length: 30 }, (_, i) => {
           const dayNum = i + 1;
           const dayStr = dayNum.toString();
-
-          const isPastOrToday =
-            dayNum <= currentRamadanDay;
-
-          const completed =
-            dailyProgress[dayStr]?.completed || [];
-
-          const dayCompleted = completed.filter(
-            (v) => v >= 0
-          ).length;
-
-          const dayScore = completed
-            .filter((v) => v >= 0)
-            .reduce(
-              (sum, idx) =>
-                sum + TASKS[idx].points,
-              0
-            );
+          const isPastOrToday = dayNum <= currentRamadanDay;
 
           return (
-            <details
-              key={dayNum}
-              open={dayNum === currentRamadanDay}
-            >
-              <summary>
-                اليوم {dayNum}{" "}
-                {dayNum === currentRamadanDay &&
-                  "(اليوم)"}
-                {dayScore > 0 &&
-                  ` — ${dayScore} نقطة`}
-                {dayCompleted === TASKS.length &&
-                  " ✓ مكتمل"}
-              </summary>
+            <details key={dayNum} open={dayNum === currentRamadanDay}>
+              <summary>اليوم {dayNum}</summary>
 
               <div className="tasks-list">
                 {TASKS.map((task, idx) => {
-                  const status = getTaskStatus(
-                    dayStr,
-                    idx
-                  );
+                  const status = getTaskStatus(dayStr, idx);
+                  const disabled = !isPastOrToday || status !== "pending";
 
-                  const disabled =
-                    !isPastOrToday ||
-                    status !== "pending";
+                  const taskName =
+                    idx === 14
+                      ? DAILY_CHALLENGES[dayNum - 1]
+                      : task.name;
 
                   return (
-                    <div
-                      key={idx}
-                      className={`task-row ${status}`}
-                    >
-                      <span className="task-name">
-                        {task.name}
-                      </span>
+                    <div key={idx} className={`task-row ${status}`}>
+                      <span>{taskName}</span>
 
                       <div className="task-controls">
                         <button
                           className="btn-done"
-                          onClick={() =>
-                            markTask(
-                              dayStr,
-                              idx,
-                              true
-                            )
-                          }
+                          onClick={() => markTask(dayStr, idx, true)}
                           disabled={disabled}
                         >
                           ✓
@@ -373,13 +264,7 @@ export default function Home() {
 
                         <button
                           className="btn-miss"
-                          onClick={() =>
-                            markTask(
-                              dayStr,
-                              idx,
-                              false
-                            )
-                          }
+                          onClick={() => markTask(dayStr, idx, false)}
                           disabled={disabled}
                         >
                           X

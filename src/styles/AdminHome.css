@@ -1,9 +1,17 @@
+/* ================= MAIN CONTAINER ================= */
+
 .admin-home {
-  padding: 2rem;
-  max-width: 1000px;
-  margin: 0 auto;
+  padding: 3rem 4rem;
+  width: 100%;
+  min-height: 100vh;
   direction: rtl;
+  background: var(--color-6); /* Dark navy */
+  font-family: "Cairo", sans-serif;
+  box-sizing: border-box;
+  color: var(--color-3);
 }
+
+/* ================= WELCOME SECTION ================= */
 
 .welcome-section {
   text-align: center;
@@ -11,99 +19,189 @@
 }
 
 .welcome-section h1 {
-  font-size: 2.5rem;
-  color: #1e3c72;
+  font-size: 2.8rem;
+  font-weight: 800;
+  color: var(--color-5);
   margin-bottom: 0.5rem;
 }
 
 .welcome-section p {
-  color: #555;
-  font-size: 1.2rem;
+  color: var(--color-4);
+  font-size: 1.1rem;
 }
+
+/* ================= STATS GRID ================= */
 
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
   margin-bottom: 3rem;
+  width: 100%;
 }
 
+/* ================= STAT CARD ================= */
+
 .stat-card {
-  background: white;
-  padding: 2rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  background: var(--color-2);
+  padding: 2.5rem 2rem;
+  border-radius: 18px;
   text-align: center;
-  transition: transform 0.2s;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255,255,255,0.05);
 }
 
 .stat-card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-6px);
+  box-shadow: 0 10px 25px rgba(18, 232, 247, 0.15);
 }
+
+/* ================= STAT NUMBER ================= */
 
 .stat-number {
-  font-size: 3.5rem;
-  font-weight: bold;
-  margin-bottom: 0.5rem;
+  font-size: 3.8rem;
+  font-weight: 900;
+  margin-bottom: 0.7rem;
 }
 
-.verified .stat-number { color: #27ae60; }
-.pending .stat-number { color: #e67e22; }
+.verified .stat-number {
+  color: var(--color-5);
+}
+
+.pending .stat-number {
+  color: #f7b801;
+}
+
+.total .stat-number {
+  color: var(--color-4);
+}
+
+/* ================= LABEL ================= */
 
 .stat-label {
-  font-size: 1.3rem;
-  color: #444;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--color-3);
 }
+
+/* ================= ACTION BUTTONS ================= */
 
 .action-buttons {
   display: flex;
   flex-wrap: wrap;
-  gap: 1.5rem;
+  gap: 2rem;
   justify-content: center;
-  margin-bottom: 2rem;
+  margin-bottom: 3rem;
 }
+
+/* ================= ADMIN BUTTON ================= */
 
 .admin-btn {
   padding: 1.2rem 2.5rem;
-  font-size: 1.3rem;
+  font-size: 1.1rem;
+  font-weight: 600;
   border: none;
-  border-radius: 10px;
-  color: white;
+  border-radius: 12px;
+  color: var(--color-3);
   cursor: pointer;
   display: flex;
   align-items: center;
   gap: 0.8rem;
-  transition: all 0.3s;
+  transition: all 0.3s ease;
   min-width: 280px;
   justify-content: center;
 }
 
 .admin-btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(18, 232, 247, 0.2);
+}
+
+.admin-btn:active {
+  transform: scale(0.97);
 }
 
 .manage {
-  background: #3498db;
+  background: var(--color-2);
+  border: 1px solid var(--color-5);
 }
 
 .verify {
-  background: #27ae60;
+  background: var(--color-5);
+  color: var(--color-1);
 }
 
+/* ================= ICON ================= */
+
 .icon {
-  font-size: 1.8rem;
+  font-size: 1.5rem;
 }
+
+/* ================= EXTRA INFO ================= */
 
 .extra-info {
   text-align: center;
-  color: #777;
-  font-size: 0.95rem;
+  color: var(--color-4);
+  font-size: 0.9rem;
 }
+
+.extra-info small {
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.extra-info button {
+  padding: 0.6rem 1.4rem;
+  border: none;
+  border-radius: 8px;
+  background: var(--color-2);
+  color: var(--color-3);
+  cursor: pointer;
+  transition: 0.3s;
+  border: 1px solid var(--color-5);
+}
+
+.extra-info button:hover {
+  background: var(--color-5);
+  color: var(--color-1);
+}
+
+/* ================= LOADING ================= */
 
 .admin-loading {
   text-align: center;
-  font-size: 1.4rem;
-  padding: 5rem;
-  color: #555;
+  font-size: 1.5rem;
+  padding: 6rem;
+  color: var(--color-4);
+}
+
+/* ================= ERROR ================= */
+
+.admin-error {
+  text-align: center;
+  padding: 4rem;
+  background: #1a2b40;
+  border-radius: 12px;
+  color: #ff6b6b;
+  border: 1px solid #ff6b6b33;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 768px) {
+  .admin-home {
+    padding: 2rem;
+  }
+
+  .welcome-section h1 {
+    font-size: 2rem;
+  }
+
+  .stat-number {
+    font-size: 3rem;
+  }
+
+  .admin-btn {
+    min-width: 100%;
+  }
 }
