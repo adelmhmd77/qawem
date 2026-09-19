@@ -1,5 +1,5 @@
 // Home.jsx
-import React, { useEffect, useState, useMemo, useCallback } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { db } from "../firebase/config";
 import {
   collection,
@@ -70,10 +70,9 @@ const TASKS = [
 
 export default function Home() {
   const [userName, setUserName] = useState("");
-  const [hearts, setHearts] = useState(3);
+  const [hearts, setHearts] = useState(5);
   const [totalScore, setTotalScore] = useState(0);
   const [dailyProgress, setDailyProgress] = useState({});
-  const [deductedDays, setDeductedDays] = useState([]);
   const [userRef, setUserRef] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -101,14 +100,19 @@ export default function Home() {
 
         const userDoc = snap.docs[0];
         const data = userDoc.data();
+
+        if (data.disabled || (data.hearts ?? 5) <= 0) {
+          window.location.href = "/wheel";
+          return;
+        }
+
         const ref = doc(db, "users", userDoc.id);
 
         setUserRef(ref);
         setUserName(data.name || "مستخدم");
-        setHearts(Math.max(0, data.hearts ?? 3));
+        setHearts(Math.max(0, data.hearts ?? 5));
         setTotalScore(data.totalScore ?? 0);
         setDailyProgress(data.dailyProgress ?? {});
-        setDeductedDays(data.lastHeartDeductionDays ?? []);
       } catch (err) {
         console.error(err);
       } finally {
@@ -121,65 +125,26 @@ export default function Home() {
 
   /* ================= CURRENT DAY ================= */
 
+  // 0  = التحدي لسه ما بدأش
+  // -1 = التحدي انتهى (استنى رمضان القادم)
+  // 1..30 = يوم التحدي الحالي
   const currentRamadanDay = useMemo(() => {
     const now = new Date();
     const diffMs = now - RAMADAN_START_DATE;
     const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-    return Math.max(0, Math.min(30, diffDays + 1));
+
+    if (diffDays < 0) return 0;
+    if (diffDays > 29) return -1;
+    return diffDays + 1;
   }, []);
 
-  /* ================= HEART DEDUCTION ================= */
-
-  const checkAndDeductHearts = useCallback(async () => {
-    if (!userRef || currentRamadanDay < 1) return;
-
-    let totalLost = 0;
-    const newDeducted = [...deductedDays];
-
-    for (let day = 1; day <= currentRamadanDay; day++) {
-      const dayStr = day.toString();
-      if (newDeducted.includes(dayStr)) continue;
-
-      const dayData = dailyProgress[dayStr] || { completed: [] };
-      let dayLost = 0;
-
-      const fajr = dayData.completed.find(v => Math.abs(v) === 1);
-      if (fajr === undefined || fajr < 0) dayLost++;
-
-      const challenge = dayData.completed.find(v => Math.abs(v) === 15);
-      if (challenge === undefined || challenge < 0) dayLost++;
-
-      if (dayLost > 0) {
-        totalLost += dayLost;
-        newDeducted.push(dayStr);
-      }
-    }
-
-    if (totalLost > 0) {
-      const newHearts = Math.max(0, hearts - totalLost);
-
-      await updateDoc(userRef, {
-        hearts: newHearts,
-        lastHeartDeductionDays: newDeducted,
-      });
-
-      setHearts(newHearts);
-      setDeductedDays(newDeducted);
-    }
-  }, [userRef, currentRamadanDay, dailyProgress, deductedDays, hearts]);
-
-  useEffect(() => {
-    if (!loading && userRef) {
-      checkAndDeductHearts();
-      const interval = setInterval(checkAndDeductHearts, 1800000);
-      return () => clearInterval(interval);
-    }
-  }, [loading, userRef, checkAndDeductHearts]);
+  const isSeasonActive = currentRamadanDay >= 1 && currentRamadanDay <= 30;
 
   /* ================= MARK TASK ================= */
 
   const markTask = async (dayStr, taskIndex, isDone) => {
     if (!userRef) return;
+    if (Number(dayStr) !== currentRamadanDay) return;
 
     const dayData = dailyProgress[dayStr] || { completed: [] };
 
@@ -187,13 +152,27 @@ export default function Home() {
 
     const markValue = isDone ? taskIndex + 1 : -(taskIndex + 1);
     const pointsToAdd = isDone ? TASKS[taskIndex].points : 0;
-
     const updatedCompleted = [...dayData.completed, markValue];
 
-    await updateDoc(userRef, {
+    // كل مرة تدوس X بتخسر قلب واحد
+    const newHearts = isDone ? hearts : Math.max(0, hearts - 1);
+    const accountDisabled = !isDone && newHearts === 0;
+
+    const updates = {
       [`dailyProgress.${dayStr}`]: { completed: updatedCompleted },
       totalScore: totalScore + pointsToAdd,
-    });
+    };
+
+    if (!isDone) updates.hearts = newHearts;
+    if (accountDisabled) updates.disabled = true;
+
+    await updateDoc(userRef, updates);
+
+    if (accountDisabled) {
+      localStorage.removeItem("memberId");
+      window.location.href = "/";
+      return;
+    }
 
     setDailyProgress(prev => ({
       ...prev,
@@ -201,6 +180,7 @@ export default function Home() {
     }));
 
     setTotalScore(prev => prev + pointsToAdd);
+    if (!isDone) setHearts(newHearts);
   };
 
   /* ================= TASK STATUS ================= */
@@ -210,9 +190,37 @@ export default function Home() {
     const value = dayData.completed.find(
       v => Math.abs(v) === taskIndex + 1
     );
-    if (value === undefined) return "pending";
-    return value > 0 ? "done" : "missed";
+
+    if (value !== undefined) return value > 0 ? "done" : "missed";
+
+    // لم يتم تسجيل أي شيء لهذه المهمة، ولو اليوم فات يبقى فاتك
+    return Number(dayStr) < currentRamadanDay ? "expired" : "pending";
   };
+
+  /* ================= DAY PROGRESS ================= */
+
+  const getDayProgress = (dayStr) => {
+    const dayData = dailyProgress[dayStr] || { completed: [] };
+    const doneCount = dayData.completed.filter(v => v > 0).length;
+    const percent = Math.round((doneCount / TASKS.length) * 100);
+    return { doneCount, percent };
+  };
+
+  /* ================= DAY ORDER (اليوم الحالي يظهر الأول) ================= */
+
+  const isCurrentDayComplete =
+    isSeasonActive &&
+    (dailyProgress[currentRamadanDay.toString()]?.completed.length ?? 0) >=
+      TASKS.length;
+
+  const dayOrder = useMemo(() => {
+    const days = Array.from({ length: 30 }, (_, i) => i + 1);
+    if (isSeasonActive && !isCurrentDayComplete) {
+      return [currentRamadanDay, ...days.filter(d => d !== currentRamadanDay)];
+    }
+    return days;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentRamadanDay, isSeasonActive, isCurrentDayComplete]);
 
   if (loading) return <div className="loading">جاري التحميل...</div>;
 
@@ -220,38 +228,112 @@ export default function Home() {
 
   return (
     <div className="home-container" dir="rtl">
-      <h2>مرحباً بك {userName}</h2>
-      <h3>تحدي رمضان ٣٠ يوم</h3>
-
-      <div className="summary-box">
-        <p>اليوم: <strong>{currentRamadanDay}</strong></p>
-        <p>قلوبك: {"❤️".repeat(hearts)}</p>
-        <p>مجموع النقاط: <strong>{totalScore}</strong></p>
+      <div className="home-header">
+        <h2>مرحباً بك {userName}</h2>
+        <h3>تحدي رمضان ٣٠ يوم</h3>
       </div>
 
+      <div className="summary-grid">
+        <div className="summary-card day">
+          <div className="summary-icon">🌙</div>
+          <div className="summary-value">{currentRamadanDay}</div>
+          <div className="summary-label">اليوم الحالي</div>
+        </div>
+
+        <div className="summary-card hearts">
+          <div className="summary-icon">
+            {hearts > 0 ? "❤️".repeat(hearts) : "🖤"}
+          </div>
+          <div className="summary-value">{hearts}</div>
+          <div className="summary-label">القلوب المتبقية</div>
+        </div>
+
+        <div className="summary-card score">
+          <div className="summary-icon">⭐</div>
+          <div className="summary-value">{totalScore}</div>
+          <div className="summary-label">مجموع النقاط</div>
+        </div>
+      </div>
+
+      {!isSeasonActive && (
+        <div className="season-banner">
+          {currentRamadanDay === 0
+            ? "🌙 التحدي لسه ما بدأش، تابعنا لمعرفة الموعد"
+            : "🌙 التحدي انتهى لهذا العام، نراكم في رمضان القادم"}
+        </div>
+      )}
+
       <div className="accordion-days">
-        {Array.from({ length: 30 }, (_, i) => {
-          const dayNum = i + 1;
+        {dayOrder.map((dayNum) => {
           const dayStr = dayNum.toString();
-          const isPastOrToday = dayNum <= currentRamadanDay;
+          const isPastOrToday = isSeasonActive && dayNum <= currentRamadanDay;
+          const isToday = dayNum === currentRamadanDay;
+          const isNextRamadanStart = !isSeasonActive && dayNum === 1;
+          const { doneCount, percent } = getDayProgress(dayStr);
 
           return (
-            <details key={dayNum} open={dayNum === currentRamadanDay}>
-              <summary>اليوم {dayNum}</summary>
+            <details
+              key={dayNum}
+              open={isToday}
+              className={!isPastOrToday ? "locked" : undefined}
+            >
+              <summary>
+                <span className="day-title">
+                  {isToday && <span className="today-badge">اليوم</span>}
+                  {isNextRamadanStart && (
+                    <span className="today-badge next-badge">
+                      رمضان القادم
+                    </span>
+                  )}
+                  اليوم {dayNum}
+                </span>
+
+                {isPastOrToday ? (
+                  <span className="day-progress">
+                    <span className="day-progress-track">
+                      <span
+                        className="day-progress-fill"
+                        style={{ width: `${percent}%` }}
+                      />
+                    </span>
+                    <span className="day-progress-label">
+                      {doneCount}/{TASKS.length}
+                    </span>
+                  </span>
+                ) : (
+                  <span className="day-locked-label">
+                    {isNextRamadanStart
+                      ? "🌙 يبدأ هنا التحدي القادم"
+                      : "🔒 لم يحن بعد"}
+                  </span>
+                )}
+              </summary>
 
               <div className="tasks-list">
                 {TASKS.map((task, idx) => {
                   const status = getTaskStatus(dayStr, idx);
-                  const disabled = !isPastOrToday || status !== "pending";
+                  const disabled = !isToday || status !== "pending";
 
                   const taskName =
                     idx === 14
                       ? DAILY_CHALLENGES[dayNum - 1]
                       : task.name;
 
+                  const statusIcon =
+                    status === "done"
+                      ? "✅"
+                      : status === "missed"
+                      ? "❌"
+                      : status === "expired"
+                      ? "⌛"
+                      : "⏳";
+
                   return (
                     <div key={idx} className={`task-row ${status}`}>
-                      <span>{taskName}</span>
+                      <span className="task-name">
+                        <span className="task-status-icon">{statusIcon}</span>
+                        {taskName}
+                      </span>
 
                       <div className="task-controls">
                         <button

@@ -1,0 +1,55 @@
+.add-user {
+  max-width: 500px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: var(--color-6);
+  border-radius: 18px;
+  box-shadow: var(--color-6) 5px 4px 40px 4px;
+}
+
+.add-user h2 {
+  margin-bottom: 0.4rem;
+}
+
+.add-user .hint {
+  color: var(--color-4);
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+}
+
+.add-user form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.add-user form input {
+  padding: 0.7rem 1rem;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+}
+
+.add-user form button {
+  padding: 0.7rem 1rem;
+  border-radius: 10px;
+  border: none;
+  background: var(--color-5);
+  color: var(--color-1);
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.add-user form button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.add-user .success-box {
+  margin-top: 1.2rem;
+  padding: 0.9rem;
+  background: #1c4d2b;
+  border: 1px solid #4caf50;
+  border-radius: 10px;
+  color: #a5d6a7;
+}

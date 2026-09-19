@@ -25,6 +25,12 @@
   color: var(--color-1);
 }
 
+.login-form button:disabled,
+.login-form input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .login-form a {
   color: beige;
   text-decoration: none;

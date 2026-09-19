@@ -1,0 +1,109 @@
+.wheel-page {
+  flex: 1;
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+}
+
+.wheel-card {
+  width: 100%;
+  max-width: 460px;
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: 2.5rem 2rem;
+  text-align: center;
+}
+
+.wheel-card h2 {
+  color: var(--color-3);
+  margin: 0 0 0.5rem;
+}
+
+.wheel-subtitle {
+  color: var(--color-4);
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+.wheel-wrap {
+  position: relative;
+  width: 240px;
+  height: 240px;
+  margin: 0 auto 2rem;
+}
+
+.wheel-pointer {
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 14px solid transparent;
+  border-right: 14px solid transparent;
+  border-top: 22px solid var(--color-5);
+  z-index: 2;
+}
+
+.wheel {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 6px solid var(--color-5);
+  background: conic-gradient(
+    #0c5365 0deg 45deg,
+    #12384a 45deg 90deg,
+    #0c5365 90deg 135deg,
+    #12384a 135deg 180deg,
+    #0c5365 180deg 225deg,
+    #12384a 225deg 270deg,
+    #0c5365 270deg 315deg,
+    #12384a 315deg 360deg
+  );
+  position: relative;
+  transition: transform 4s cubic-bezier(0.17, 0.67, 0.16, 0.99);
+}
+
+.wheel-segment {
+  position: absolute;
+  top: 14%;
+  left: 50%;
+  font-size: 1.4rem;
+  transform-origin: 0 100px;
+}
+
+.wheel-challenge {
+  background: rgba(18, 232, 247, 0.08);
+  border: 1px solid rgba(18, 232, 247, 0.3);
+  color: var(--color-4);
+  padding: 1.2rem;
+  border-radius: 14px;
+  margin-bottom: 1.2rem;
+  line-height: 1.8;
+}
+
+.wheel-challenge-icon {
+  font-size: 2rem;
+  margin-bottom: 0.4rem;
+}
+
+.wheel-challenge strong {
+  display: block;
+  color: var(--color-3);
+  font-size: 1.1rem;
+  margin-top: 0.3rem;
+}
+
+.wheel-success {
+  background: rgba(76, 175, 80, 0.15);
+  border: 1px solid #4caf50;
+  color: #a5d6a7;
+  padding: 0.9rem;
+  border-radius: 12px;
+  margin-bottom: 1.2rem;
+}

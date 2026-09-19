@@ -5,17 +5,17 @@ export default function Footer() {
 <div className="footer">
   <p>
     © {new Date().getFullYear()} قاوم — تم التطوير بواسطة{" "}
-    <a 
-      href="https://adelmhmd77.github.io/Adel-Mohammed/" 
-      target="_blank" 
+    <a
+      href="https://adel-mhmd.vercel.app/"
+      target="_blank"
       rel="noopener noreferrer"
     >
       عادل محمد
     </a>{" "}
     و{" "}
-    <a 
-      href="https://your-link-hazem.com" 
-      target="_blank" 
+    <a
+      href="https://github.com/hazem623"
+      target="_blank"
       rel="noopener noreferrer"
     >
       حازم النمر

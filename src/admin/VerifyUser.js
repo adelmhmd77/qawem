@@ -54,7 +54,7 @@ export default function VerifyUser() {
       await updateDoc(userRef, {
         status: "approved",
         memberId: generateRandomId(),
-        hearts: 3,
+        hearts: 5,
         verifiedAt: serverTimestamp(),
       });
 
@@ -102,40 +102,49 @@ export default function VerifyUser() {
         ← الرجوع إلى لوحة التحكم
       </button>
 
-      <h2>مستخدمين في انتظار التوثيق</h2>
+      <h2>مستخدمين في انتظار التوثيق ({users.length})</h2>
 
       {users.length === 0 ? (
         <p>لا يوجد مستخدمين في انتظار المراجعة</p>
       ) : (
-        users.map((user) => (
-          <div className="user" key={user.id}>
-            <p>
-              <strong>الاسم:</strong> {user.name || "غير محدد"}
-            </p>
-            <p>
-              <strong>تاريخ الميلاد:</strong> {user.birthDate || "غير محدد"}
-            </p>
-            <p>
-              <strong>رقم الهاتف:</strong> {user.phone || "غير محدد"}
-            </p>
+        <div className="table-wrap">
+          <table className="users-table">
+            <thead>
+              <tr>
+                <th>الاسم</th>
+                <th>تاريخ الميلاد</th>
+                <th>رقم الهاتف</th>
+                <th>الإجراءات</th>
+              </tr>
+            </thead>
+            <tbody>
+              {users.map((user) => (
+                <tr key={user.id}>
+                  <td data-label="الاسم">{user.name || "غير محدد"}</td>
+                  <td data-label="تاريخ الميلاد">{user.birthDate || "غير محدد"}</td>
+                  <td data-label="رقم الهاتف">{user.phone || "غير محدد"}</td>
+                  <td data-label="الإجراءات">
+                    <div className="action-buttons">
+                      <button
+                        className="btn-verify"
+                        onClick={() => handleVerify(user.id)}
+                      >
+                        قبول
+                      </button>
 
-            <div className="action-buttons">
-              <button
-                className="btn-verify"
-                onClick={() => handleVerify(user.id)}
-              >
-                قبول
-              </button>
-
-              <button
-                className="btn-reject"
-                onClick={() => handleReject(user.id, user.name)}
-              >
-                رفض
-              </button>
-            </div>
-          </div>
-        ))
+                      <button
+                        className="btn-reject"
+                        onClick={() => handleReject(user.id, user.name)}
+                      >
+                        رفض
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );

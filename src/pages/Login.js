@@ -1,60 +1,79 @@
 import React, { useState } from "react";
-import "../styles/Login.css";
 import { db } from "../firebase/config";
 import { collection, query, where, getDocs } from "firebase/firestore";
 
 export default function Login() {
   const [userId, setUserId] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const checkId = async () => {
-    if (!userId) {
+    const trimmedId = userId.trim();
+
+    if (!trimmedId) {
       setError("من فضلك ادخل ال ID");
       return;
     }
 
+    setError("");
+    setLoading(true);
+
     try {
       const q = query(
         collection(db, "users"),
-        where("memberId", "==", userId),
+        where("memberId", "==", trimmedId),
         where("status", "==", "approved")
       );
 
       const querySnapshot = await getDocs(q);
 
       if (!querySnapshot.empty) {
-        // ممكن تخزن بياناته في localStorage
-        localStorage.setItem("memberId", userId);
+        const userData = querySnapshot.docs[0].data();
+        const isDisabled = userData.disabled || (userData.hearts ?? 5) <= 0;
 
-        window.location = "/home";
+        localStorage.setItem("memberId", trimmedId);
+        window.location = isDisabled ? "/wheel" : "/home";
       } else {
         setError("الرجاء التاكد من ال ID الخاص بك");
       }
-
     } catch (err) {
       console.error(err);
       setError("حدث خطأ حاول مرة اخرى");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="login-form">
-      <img src="logo-light.png" alt="Qawem Logo" />
+    <div className="auth-page">
+      <div className="auth-card">
+        <img className="logo" src="/logo-light.png" alt="Qawem Logo" />
 
-      {error && <div className="error">{error}</div>}
+        <h2>مرحباً بعودتك</h2>
+        <p className="subtitle">ادخل رقم عضويتك للمتابعة في تحدي قاوم</p>
 
-      <input
-        type="text"
-        placeholder="ادخل ال ID الخاص بك"
-        value={userId}
-        onChange={(e) => setUserId(e.target.value)}
-      />
+        {error && <div className="error">{error}</div>}
 
-      <button onClick={checkId}>ابدء قاوم</button>
+        <div className="auth-field">
+          <label>رقم العضوية</label>
+          <input
+            type="text"
+            placeholder="مثال: QW-123456"
+            value={userId}
+            onChange={(e) => setUserId(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && checkId()}
+            disabled={loading}
+          />
+        </div>
 
-      <a href="/register">
-        ليس لديك حساب؟ <span>سجل هنا</span>
-      </a>
+        <button className="btn-submit" onClick={checkId} disabled={loading}>
+          {loading ? "جاري التحقق..." : "ابدأ قاوم"}
+        </button>
+
+        <a className="auth-link" href="/register">
+          ليس لديك حساب؟ <span>سجل هنا</span>
+        </a>
+      </div>
     </div>
   );
 }

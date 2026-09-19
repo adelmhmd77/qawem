@@ -6,7 +6,7 @@ export default function AdminProtectedRoute() {
 
   // If not admin logged in → redirect to admin login
   if (!isAdminLoggedIn) {
-    return <Navigate to="/admin" replace />;
+    return <Navigate to="/adminlogin" replace />;
   }
 
   return <Outlet />;

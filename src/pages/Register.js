@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import "../styles/Register.css";
-import { db } from "../firebase/config"; // عدل المسار حسب مشروعك
+import { db } from "../firebase/config";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 
 export default function Register() {
@@ -9,16 +8,25 @@ export default function Register() {
   const [phone, setPhone] = useState("");
   const [showPopup, setShowPopup] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const trimmedPhone = phone.trim();
+    if (!/^\+?\d{8,15}$/.test(trimmedPhone)) {
+      setError("رقم الهاتف غير صحيح، تأكد من كتابته مع رمز الدولة");
+      return;
+    }
+
+    setError("");
     setLoading(true);
 
     try {
       await addDoc(collection(db, "users"), {
-        name: name,
+        name: name.trim(),
         birthDate: birthDate,
-        phone: phone,
+        phone: trimmedPhone,
         status: "pending",
         createdAt: serverTimestamp(),
       });
@@ -27,8 +35,8 @@ export default function Register() {
       setName("");
       setBirthDate("");
       setPhone("");
-    } catch (error) {
-      console.error("Error adding document: ", error);
+    } catch (err) {
+      console.error("Error adding document: ", err);
       alert("حصل خطأ حاول تاني");
     }
 
@@ -40,49 +48,68 @@ export default function Register() {
   };
 
   return (
-    <div className="register-form">
-      <img src="logo-light.png" alt="Qawem Logo" />
+    <div className="auth-page">
+      <div className="auth-card">
+        <img className="logo" src="/logo-light.png" alt="Qawem Logo" />
 
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="اسمك"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-        />
+        <h2>انضم لمجتمع قاوم</h2>
+        <p className="subtitle">سجّل بياناتك وسنتواصل معك بعد المراجعة</p>
 
-        <input
-          type="date"
-          value={birthDate}
-          onChange={(e) => setBirthDate(e.target.value)}
-          required
-        />
+        {error && <div className="error">{error}</div>}
 
-        <input
-          type="tel"
-          placeholder="رقم تيليفونك مع رمز الدولة"
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-          required
-        />
+        <form onSubmit={handleSubmit}>
+          <div className="auth-field">
+            <label>الاسم</label>
+            <input
+              type="text"
+              placeholder="اسمك"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
+          </div>
 
-        <input
-          type="submit"
-          value={loading ? "جاري الإرسال..." : "ارسل بياناتك"}
-          disabled={loading}
-        />
-      </form>
+          <div className="auth-field">
+            <label>تاريخ الميلاد</label>
+            <input
+              type="date"
+              value={birthDate}
+              onChange={(e) => setBirthDate(e.target.value)}
+              required
+            />
+          </div>
 
-      <a href="/">انت جزء من مجتمع قاوم؟ <span>سجل دخول الان</span></a>
+          <div className="auth-field">
+            <label>رقم الهاتف</label>
+            <input
+              type="tel"
+              placeholder="رقم تيليفونك مع رمز الدولة"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              required
+            />
+          </div>
+
+          <button type="submit" className="btn-submit" disabled={loading}>
+            {loading ? "جاري الإرسال..." : "ارسل بياناتك"}
+          </button>
+        </form>
+
+        <a className="auth-link" href="/">
+          انت جزء من مجتمع قاوم؟ <span>سجل دخول الآن</span>
+        </a>
+      </div>
 
       {showPopup && (
-        <div className="popup">
-          <h2>تم تسجيلك بنجاح</h2>
-          <p>
-            سيتم مراجعة بياناتك بعناية وستستلم رسالة علي الواتس اب بالid الخاص بك
-          </p>
-          <button onClick={tohome}>العودة للصفحة الرئيسية</button>
+        <div className="modal-overlay">
+          <div className="modal-card">
+            <h2>تم تسجيلك بنجاح 🎉</h2>
+            <p>
+              سيتم مراجعة بياناتك بعناية وستستلم رسالة على الواتساب بالـ ID
+              الخاص بك
+            </p>
+            <button onClick={tohome}>العودة للصفحة الرئيسية</button>
+          </div>
         </div>
       )}
     </div>

@@ -42,6 +42,15 @@
   color: var(--color-5);
 }
 
+.register-form .error {
+  direction: rtl;
+  padding: 5px 10px;
+  background: #DC3545;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  text-align: center;
+}
+
 .register-form .popup{
   position: absolute;
   display: block;

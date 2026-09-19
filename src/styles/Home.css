@@ -1,57 +1,225 @@
 .home-container {
-  width: 60%;
-  padding: 1.5rem;
+  width: 100%;
+  max-width: 900px;
+  padding: 2rem 1.5rem 3rem;
   margin: 0 auto;
 }
 
-.summary-box {
-  background: linear-gradient(to left top, #081925, #020f1a);
-  padding: 1rem;
-  border-radius: 10px;
-  margin-bottom: 2rem;
+/* ================= HEADER ================= */
+
+.home-header {
   text-align: center;
-  box-shadow: 0 4px 18px var(--color-6);
+  margin-bottom: 2rem;
 }
 
+.home-header h2 {
+  margin: 0 0 0.3rem;
+  font-size: 1.8rem;
+  color: var(--color-3);
+}
+
+.home-header h3 {
+  margin: 0;
+  font-weight: 500;
+  color: var(--color-4);
+}
+
+/* ================= SUMMARY CARDS ================= */
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.2rem;
+  margin-bottom: 2.5rem;
+}
+
+.summary-card {
+  background: linear-gradient(to left top, #081925, #020f1a);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  padding: 1.4rem 1rem;
+  text-align: center;
+  box-shadow: 0 4px 18px var(--color-6);
+  transition: transform 0.25s ease;
+}
+
+.summary-card:hover {
+  transform: translateY(-4px);
+}
+
+.summary-icon {
+  font-size: 1.6rem;
+  margin-bottom: 0.4rem;
+  line-height: 1;
+}
+
+.summary-value {
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: var(--color-5);
+}
+
+.summary-card.hearts .summary-value {
+  color: #ff6b81;
+}
+
+.summary-card.score .summary-value {
+  color: #ffd54f;
+}
+
+.summary-label {
+  margin-top: 0.3rem;
+  font-size: 0.85rem;
+  color: var(--color-4);
+}
+
+/* ================= SEASON BANNER ================= */
+
+.season-banner {
+  text-align: center;
+  padding: 1rem 1.5rem;
+  margin-bottom: 1.5rem;
+  border-radius: 14px;
+  background: rgba(18, 232, 247, 0.08);
+  border: 1px solid rgba(18, 232, 247, 0.3);
+  color: var(--color-4);
+  font-weight: 600;
+}
+
+/* ================= ACCORDION ================= */
+
 .accordion-days details {
-  margin-bottom: 1.2rem;
-  border: none;
-  border-radius: 18px;
+  margin-bottom: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
   overflow: hidden;
   box-shadow: var(--color-6) 5px 4px 40px 4px;
+  background: var(--color-6);
 }
+
+.accordion-days details.locked {
+  opacity: 0.5;
+}
+
 .accordion-days summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
   padding: 1rem 1.2rem;
   background: var(--color-6);
   font-weight: bold;
   cursor: pointer;
-  border: none;
   color: #fff;
+  list-style: none;
 }
+
+.accordion-days summary::-webkit-details-marker {
+  display: none;
+}
+
+.day-title {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  white-space: nowrap;
+}
+
+.today-badge {
+  background: var(--color-5);
+  color: var(--color-1);
+  font-size: 0.7rem;
+  font-weight: 800;
+  padding: 0.15rem 0.6rem;
+  border-radius: 20px;
+}
+
+.today-badge.next-badge {
+  background: #ffd54f;
+}
+
+.day-progress {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex: 1;
+  justify-content: flex-end;
+}
+
+.day-progress-track {
+  width: 100px;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.day-progress-fill {
+  display: block;
+  height: 100%;
+  background: linear-gradient(to left, var(--color-5), #4caf50);
+  border-radius: 20px;
+  transition: width 0.4s ease;
+}
+
+.day-progress-label {
+  font-size: 0.85rem;
+  color: var(--color-4);
+  min-width: 40px;
+  text-align: left;
+}
+
+.day-locked-label {
+  font-size: 0.85rem;
+  color: var(--color-4);
+  font-weight: normal;
+}
+
+/* ================= TASKS ================= */
 
 .tasks-list {
   padding: 1rem;
   background: var(--color-6);
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
 }
 
 .task-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.8rem;
-  margin-bottom: 0.6rem;
-  border-radius: 6px;
-  border: none;
+  gap: 0.8rem;
+  padding: 0.8rem 1rem;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  flex-wrap: wrap;
+}
+
+.task-name {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.task-status-icon {
+  font-size: 0.9rem;
 }
 
 .task-row.done {
-  background: var(--color-2);
+  background: rgba(76, 175, 80, 0.15);
 }
 
 .task-row.missed {
-  background: #971327;
+  background: rgba(151, 19, 39, 0.25);
   text-decoration: line-through;
-  color: #777;
+  color: #b0b0b0;
+}
+
+.task-row.expired {
+  background: rgba(255, 255, 255, 0.02);
+  color: #6b7684;
+  opacity: 0.7;
 }
 
 .task-controls {
@@ -64,49 +232,81 @@
   background: #4caf50;
   color: white;
   border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
+  padding: 0.4rem 0.9rem;
+  border-radius: 8px;
   cursor: pointer;
+  transition: 0.2s ease;
 }
 
 .btn-miss {
   background: #f44336;
   color: white;
   border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
+  padding: 0.4rem 0.9rem;
+  border-radius: 8px;
   cursor: pointer;
+  transition: 0.2s ease;
 }
 
 .btn-done:disabled,
 .btn-miss:disabled {
-  opacity: 0.5;
+  opacity: 0.4;
   cursor: not-allowed;
-  transition: all 0.3s ease;
-}
-.btn-done:hover:not(:disabled) {
-  background: #45a049;
-}
-.btn-miss:hover:not(:disabled) {
-  background: #e53935;
-}
-.task-points {
-  font-weight: bold;
-  color: #1976d2;
-  min-width: 50px;
-  text-align: right;
-}
-.home-container h2 {
-  text-align: center;
-  margin-bottom: 1.5rem;
-  color: #1976d2;
-}
-.home-container h3 {
-  padding: 1.5rem;
-  max-width: 900px;
-  margin: 0 auto;
 }
 
-.summary-box p {
-  color: #1976d2;
+.btn-done:hover:not(:disabled) {
+  background: #45a049;
+  transform: translateY(-2px);
+}
+
+.btn-miss:hover:not(:disabled) {
+  background: #e53935;
+  transform: translateY(-2px);
+}
+
+.task-points {
+  font-weight: bold;
+  color: var(--color-5);
+  min-width: 40px;
+  text-align: left;
+}
+
+.loading {
+  text-align: center;
+  padding: 4rem;
+  font-size: 1.2rem;
+  color: var(--color-4);
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 640px) {
+  .summary-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.6rem;
+  }
+
+  .summary-card {
+    padding: 1rem 0.5rem;
+  }
+
+  .summary-value {
+    font-size: 1.3rem;
+  }
+
+  .summary-label {
+    font-size: 0.7rem;
+  }
+
+  .accordion-days summary {
+    flex-wrap: wrap;
+  }
+
+  .day-progress-track {
+    width: 70px;
+  }
+
+  .task-row {
+    justify-content: space-between;
+  }
 }

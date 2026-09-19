@@ -1,7 +1,6 @@
 // adminlogin.jsx
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // make sure you have react-router-dom installed
-import '../styles/AdminLogin.css'; // optional styling file
+import { useNavigate } from 'react-router-dom';
 
 export default function AdminLogin() {
   const [username, setUsername] = useState('');
@@ -19,34 +18,30 @@ export default function AdminLogin() {
     e.preventDefault();
     setError('');
 
-    // Find matching admin
     const matchedAdmin = validAdmins.find(
       admin => admin.username === username.trim().toLowerCase() &&
                admin.password === password
     );
 
     if (matchedAdmin) {
-      // Success - save login state
       localStorage.setItem('isAdminLoggedIn', 'true');
       localStorage.setItem('adminUsername', username.trim().toLowerCase());
-
-      // Redirect to admin dashboard (change path as needed)
-      navigate('/admin'); // or '/manageusers' or wherever your admin pages are
+      navigate('/admin');
     } else {
       setError('اسم المستخدم أو كلمة المرور غير صحيحة');
     }
   };
 
   return (
-    <div className="admin-login-container" dir="rtl">
-      <div className="login-box">
+    <div className="auth-page">
+      <div className="auth-card">
         <h2>تسجيل دخول الإدارة</h2>
-        <p className="subtitle">فقط لـ adel و hazem</p>
+        <p className="subtitle">فقط لـ عادل وحازم</p>
 
-        {error && <div className="error-message">{error}</div>}
+        {error && <div className="error">{error}</div>}
 
         <form onSubmit={handleSubmit}>
-          <div className="form-group">
+          <div className="auth-field">
             <label>اسم المستخدم</label>
             <input
               type="text"
@@ -58,7 +53,7 @@ export default function AdminLogin() {
             />
           </div>
 
-          <div className="form-group">
+          <div className="auth-field">
             <label>كلمة المرور</label>
             <input
               type="password"
@@ -69,14 +64,14 @@ export default function AdminLogin() {
             />
           </div>
 
-          <button type="submit" className="login-btn">
+          <button type="submit" className="btn-submit">
             تسجيل الدخول
           </button>
         </form>
 
-        <div className="back-link">
-          <a href="/">العودة إلى الصفحة الرئيسية</a>
-        </div>
+        <a className="auth-link" href="/">
+          العودة إلى الصفحة الرئيسية
+        </a>
       </div>
     </div>
   );

@@ -21,6 +21,12 @@ export default function AdminHome() {
 
   const adminUsername = localStorage.getItem("adminUsername") || "الإداري";
 
+  const handleLogout = () => {
+    localStorage.removeItem("isAdminLoggedIn");
+    localStorage.removeItem("adminUsername");
+    navigate("/adminlogin");
+  };
+
   useEffect(() => {
     let unsubscribeVerified;
     let unsubscribePending;
@@ -36,14 +42,6 @@ export default function AdminHome() {
       unsubscribeVerified = onSnapshot(
         verifiedQ,
         (snap) => {
-          console.log(
-            "[AdminHome] Verified snapshot received. Count:",
-            snap.size,
-          );
-          console.log(
-            "[AdminHome] Verified doc IDs:",
-            snap.docs.map((d) => d.id),
-          );
           setVerifiedCount(snap.size);
         },
         (err) => {
@@ -61,10 +59,6 @@ export default function AdminHome() {
       unsubscribePending = onSnapshot(
         pendingQ,
         (snap) => {
-          console.log(
-            "[AdminHome] Pending snapshot received. Count:",
-            snap.size,
-          );
           setPendingCount(snap.size);
           setLoading(false);
         },
@@ -77,7 +71,6 @@ export default function AdminHome() {
       // ── Total users (debug) ───────────────────────────
       const allUsersQ = query(collection(db, "users"));
       unsubscribeAll = onSnapshot(allUsersQ, (snap) => {
-        console.log("[AdminHome] Total users in collection:", snap.size);
         setTotalUsers(snap.size);
       });
     } catch (err) {
@@ -130,6 +123,9 @@ export default function AdminHome() {
       <div className="welcome-section">
         <h1>مرحباً بك، {adminUsername === "adel" ? "عادل" : "حازم"} 👋</h1>
         <p>لوحة تحكم الإدارة – قاوم</p>
+        <button className="logout-link" onClick={handleLogout}>
+          تسجيل الخروج
+        </button>
       </div>
 
       <div className="stats-grid">
@@ -164,6 +160,14 @@ export default function AdminHome() {
         >
           <span className="icon">✅</span>
           التحقق من المستخدمين الجدد
+        </button>
+
+        <button
+          className="admin-btn add"
+          onClick={() => navigate("/add-user")}
+        >
+          <span className="icon">➕</span>
+          إضافة مستخدم يدوياً
         </button>
       </div>
 

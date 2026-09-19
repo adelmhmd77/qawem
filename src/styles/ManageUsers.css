@@ -1,26 +1,50 @@
-.user-card {
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  padding: 1.2rem;
-  margin-bottom: 1.2rem;
-  background: #fafafa;
-  color: black;
+.manage {
+  max-width: 1100px;
+  margin: 2rem auto;
+  padding: 0 1.5rem;
 }
 
-.hearts-row {
+.manage-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin: 1rem 0;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.manage-search {
+  padding: 0.6rem 1rem;
+  border-radius: 10px;
+  border: 1px solid var(--surface-border);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--color-3);
+  min-width: 260px;
+  outline: none;
+}
+
+.manage-search:focus {
+  border-color: var(--color-5);
+}
+
+.hearts-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  white-space: nowrap;
 }
 
 .hearts-display {
-  font-size: 28px;
+  font-size: 18px;
 }
 
 .heart-buttons {
   display: flex;
-  gap: 0.8rem;
+  gap: 0.3rem;
+}
+
+.heart-buttons button {
+  padding: 0.2rem 0.55rem;
 }
 
 .btn-add {
@@ -35,8 +59,8 @@
 
 .user-actions {
   display: flex;
-  gap: 1rem;
-  margin-top: 1rem;
+  gap: 0.5rem;
+  flex-wrap: wrap;
 }
 
 .btn-edit {
@@ -49,32 +73,31 @@
   color: white;
 }
 
-.edit-form {
-  display: flex;
-  flex-direction: column;
-  gap: 0.8rem;
+.btn-reactivate {
+  background: var(--color-5);
+  color: var(--color-1);
 }
 
-.edit-form input {
-  padding: 0.6rem;
-  border: 1px solid #ccc;
-  border-radius: 6px;
+.status-active {
+  color: #4caf50;
+  font-weight: 600;
 }
 
-.edit-actions {
-  display: flex;
-  gap: 1rem;
+.status-disabled {
+  color: #ff6b6b;
+  font-weight: 600;
 }
 
-button {
-  padding: 0.6rem 1.2rem;
+.manage button {
+  padding: 0.45rem 0.9rem;
   border: none;
   border-radius: 6px;
   cursor: pointer;
   font-weight: 500;
+  font-size: 0.85rem;
 }
 
-button:disabled {
+.manage button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
