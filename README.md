@@ -8,10 +8,12 @@
 
 The web app behind **Qawem**, a Ramadan challenge built around daily faith-focused tasks and competitions.
 
-<img width="915" height="476" alt="image" src="https://github.com/user-attachments/assets/43a0245d-f4aa-482c-8ec5-2063ed1cea1f" />
 
 > قاوم مش للكل. قاوم للي هيكمل.
 > *Qawem is not for everyone. Qawem is for those who finish.*
+
+<img width="915" height="476" alt="image" src="https://github.com/user-attachments/assets/43a0245d-f4aa-482c-8ec5-2063ed1cea1f" />
+
 
 ---
 
